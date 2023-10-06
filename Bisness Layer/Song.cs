@@ -33,23 +33,29 @@ namespace Bisness_Layer
 
         public DJ DJ { get; set; }
 
+        [ForeignKey("Member")]
+        public int MemberId { get; set; }
+
+        public Member Member { get; set; }
+
         private Song()
         {
             AcceptedSongs = new List<Song>();
             NotApprovedSongs = new List<Song>();
             LikedSongs = new List<Song>();
         }
-        public Song(int id, string name, string singer, string description, int likes,DJ dj)
+        public Song(int id, string name, string singer, string description, int likes,DJ dj, Member member)
         {
             id = this.Id;
-            name= this.Name;
-            singer= this.Singer;
-            description= this.Description;
-            likes= this.Likes;
+            name = this.Name;
+            singer = this.Singer;
+            description = this.Description;
+            likes = this.Likes;
             dj = DJ;
             AcceptedSongs = new List<Song>();
-            NotApprovedSongs= new List<Song>();
-            LikedSongs= new List<Song>();
+            NotApprovedSongs = new List<Song>();
+            LikedSongs = new List<Song>();
+            Member = member;
         }
     }
 }
