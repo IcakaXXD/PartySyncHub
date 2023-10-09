@@ -22,6 +22,7 @@ namespace Bisness_Layer
 
         public List<Location> Locations { get; set; }
 
+
         private Admin()
         {
             Locations = new List<Location>();

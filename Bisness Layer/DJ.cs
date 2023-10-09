@@ -25,36 +25,28 @@ namespace Bisness_Layer
         public string Email { get; set; }
        
         [Phone]
-        public string Phone { get; set; }//= string.Empty;?? 
-
+        public string Phone { get; set; }
 
         //[Required]
         //[CreditCard]
-        //public string CreditCard { get; set; } //dali trqbva da e string?
+        //public string CreditCard { get; set; } //dali trqbva da e string?        
+        [ForeignKey("PartySession")]
+        public int PartySessionID { get; set; }
 
-        //public List<Song> LikedSongs { get; set; } //ima li smisul ot tozi list tuk?
-       
-        public List<Song> NotAprovedSongs { get;set; } 
-        //ne znam kak da svurja tiq dvata lista sus song🥲🥲 ili az sum prost i te sa svurzani 😀🔫
-
-        public List<Song> AcceptedSongs { get; set; }
-
+        public PartySession PartySession { get; set; }
         private DJ()
         {
-            //LikedSongs = new List<Song>();
-            NotAprovedSongs = new List<Song>();
-            AcceptedSongs = new List<Song>();
+            
+            
         }
-        public DJ(int id,string nickname,string password, string email, string phone)
+        public DJ(int id,string nickname,string password, string email, string phone,PartySession partySession)
         {
             Id= id;
             Nickname = nickname;
             Password = password;
             Email = email;
             Phone = phone;
-            NotAprovedSongs = new List<Song>();
-            AcceptedSongs = new List<Song>();
-            //LikedSongs= new List<Song>();
+            PartySession = partySession;
         }
 
     }
