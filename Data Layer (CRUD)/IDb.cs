@@ -8,14 +8,14 @@ namespace Data_Layer__CRUD_
 {
     public interface IDb<T,K>
     {
-        void Create(T item);
+        Task CreateAsync(T item);
 
-        T Read(K key, bool useNavigationalProperties = false);
+        Task<T> ReadAsync(K key, bool useNavigationalProperties = false, bool isReadOnly = true);
 
-        IEnumerable<T> ReadAll(bool useNavigationalProperties = false);
+        Task<ICollection<T>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true);
 
-        void Update(T item, bool useNavigationalProperties = false, bool readOnly = false);
+        Task UpdateAsync(T item, bool useNavigationalProperties = false);
 
-        void Delete(K key, bool readOnly = false);
+        Task DeleteAsync(K key);
     }
 }

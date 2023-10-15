@@ -21,6 +21,7 @@ namespace Bisness_Layer
         [MaxLength(50, ErrorMessage = "Password cannot be more than 50 symbols!")]
         public string Password { get; set; }
 
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
        
@@ -34,6 +35,7 @@ namespace Bisness_Layer
         public int PartySessionID { get; set; }
 
         public PartySession PartySession { get; set; }
+
         private DJ()
         {
             

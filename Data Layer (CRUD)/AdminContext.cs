@@ -3,6 +3,7 @@ using Data_Layer;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,46 +17,33 @@ namespace Data_Layer__CRUD_
         {
             this.dBContext = dBContext;
         }
-        public void Create(Admin item)
-        {
-            dBContext.Admins.Add(item);
-            dBContext.SaveChanges();
-        }
-
-        public void Delete(int key, bool readOnly = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Admin Read(int key, bool useNavigationalProperties = false)
+  
+        public async Task CreateAsync(Admin item)
         {
             try
             {
-                if (useNavigationalProperties)
-                {
-                    return dBContext.Admins.Include(l => l.Locations).FirstOrDefault(l => l.Id == key);
-                }
-                else
-                {
-                    return dBContext.Admins.Find(key);
-                }
+                dBContext.Admins.Add(item);
+                await dBContext.SaveChangesAsync();
             }
             catch (Exception)
             {
+
                 throw;
             }
+            
         }
 
-        public IEnumerable<Admin> ReadAll(bool useNavigationalProperties = false)
+        public async Task DeleteAsync(int key)
         {
             try
             {
-                IQueryable<Admin> query = dBContext.Admins;
-                if (useNavigationalProperties)
+                Admin adminFromDb = await ReadAsync(key,false,false);
+                if (adminFromDb == null)
                 {
-                    query = query.Include(l => l.Locations);
+                    throw new ArgumentException("This admin does not exist");
                 }
-                return query.ToList();
+                dBContext.Admins.Remove(adminFromDb);
+                await dBContext.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -64,9 +52,57 @@ namespace Data_Layer__CRUD_
             }
         }
 
-        public void Update(Admin item, bool useNavigationalProperties = false, bool readOnly = false)
+        public async Task<ICollection<Admin>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
-            throw new NotImplementedException();
+            IQueryable<Admin> query = dBContext.Admins;
+            if (useNavigationalProperties)
+            {
+                query = query.Include(l => l.Locations);
+            }
+            if (isReadOnly)
+            {
+                query= query.AsNoTrackingWithIdentityResolution();
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<Admin> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        {
+            IQueryable<Admin> query = dBContext.Admins;
+            if (useNavigationalProperties)
+            {
+                query = query.Include(l => l.Locations);
+            }
+            if (isReadOnly)
+            {
+                query = query.AsNoTrackingWithIdentityResolution();
+            }
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateAsync(Admin item, bool useNavigationalProperties = false)
+        {
+            Admin adminFromDb = await ReadAsync(item.Id, useNavigationalProperties,false);
+            adminFromDb.Name = item.Name;
+            adminFromDb.Password = item.Password;
+            if (useNavigationalProperties)
+            {
+                List<Location> locations = new List<Location>();
+                foreach (Location l in item.Locations)
+                {
+                    Location locationFromDb = await dBContext.Locations.FindAsync(l.Id);
+                    if (locationFromDb != null)
+                    {
+                        locations.Add(locationFromDb);
+                    }
+                    else
+                    {
+                        locations.Add(l);
+                    }
+                }
+                adminFromDb.Locations = locations;
+            }
+            await dBContext.SaveChangesAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,9 @@ namespace Bisness_Layer
 {
     public class PartySession
     {
+        [Key]
+        public int Id { get; set; }
+
         [ForeignKey("Admin")]
         public int AdminId { get; set; }              
         [ForeignKey("Location")]
@@ -26,8 +30,9 @@ namespace Bisness_Layer
             DJs = new List<DJ>();
             Members = new List<Member>();
         }
-        public PartySession(Admin admin,Location location)
+        public PartySession(int id,Admin admin,Location location)
         {
+            id = Id;
             admin = Admin;
             location = Location;
             NotAprovedSongs = new List<Song>();
