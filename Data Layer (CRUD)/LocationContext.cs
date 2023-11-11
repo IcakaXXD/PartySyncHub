@@ -1,4 +1,4 @@
-﻿using Bisness_Layer;
+﻿using Business_Layer;
 using Data_Layer;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -101,7 +101,7 @@ namespace Data_Layer__CRUD_
 
                 if (useNavigationalProperties)
                 {
-                    Admin adminFromDb = await dBContext.Admins.FirstAsync(item.Admin.Id);
+                    Admin adminFromDb = await dBContext.Admins.FindAsync(item.Admin.Id);
                     if (adminFromDb != null)
                     {
                         locationFromDb.Admin = adminFromDb;

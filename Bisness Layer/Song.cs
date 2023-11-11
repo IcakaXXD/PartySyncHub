@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Bisness_Layer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bisness_Layer
+namespace Business_Layer
 {
     public class Song
     {
@@ -21,22 +22,26 @@ namespace Bisness_Layer
         public string Description { get; set; }
         public int LikesCount { get; set; } = 0;
 
-        [ForeignKey("PartySession")]
-        public int PartySessionID { get; set; }
-        public PartySession PartySession { get; set; }
+        //[ForeignKey("PartySession")]
+        //public int PartySessionID { get; set; }
+        //public PartySession PartySession { get; set; }
+        public List<PartySession> PartySessions { get; set; }
+        public List<SongPartySession> SongPartySessions { get; set; }
         private Song()
         {
-           
+            PartySessions = new List<PartySession>();
+            SongPartySessions = new List<SongPartySession>();
         }
-        public Song(int id, string name, string singer, string description, int likes,PartySession partySession)
+        public Song(int id, string name, string singer, string description, int likes)/*,PartySession partySession)*/
         {
             id = this.Id;
             name = this.Name;
             singer = this.Singer;
             description = this.Description;
             likes = this.LikesCount;
-            partySession = PartySession;
-            
+            SongPartySessions = new List<SongPartySession>();
+            PartySessions = new List<PartySession>();
+
         }
     }
 }

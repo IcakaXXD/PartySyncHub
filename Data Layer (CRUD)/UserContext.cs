@@ -10,23 +10,24 @@ using System.Threading.Tasks;
 
 namespace Data_Layer__CRUD_
 {
-    public class SongContext : IDb<Song, int>
+    public class UserContext : IDb<User, int>
     {
         private readonly PartySyncHubDBContext dBContext;
-        public SongContext()
+        public UserContext()
         {
             this.dBContext = dBContext;
         }
-        public async Task CreateAsync(Song item)
+        public async Task CreateAsync(User item)
         {
             try
-            {   //mai nqma nujda ot tova. tva e za 1:mnogo
-                //PartySession partySessionFromDB = await dBContext.PartySessions.FindAsync(item.PartySessionID);
+            {
+                //mai nqma nujda ot tova. tva e za 1:mnogo
+                //PartySession partySessionFromDB = await dBContext.PartySessions.FindAsync(item.PartySession);
                 //if (partySessionFromDB != null)
                 //{
                 //    item.PartySession = partySessionFromDB;
                 //}
-                dBContext.Songs.Add(item);
+                dBContext.Users.Add(item);
                 await dBContext.SaveChangesAsync();
             }
             catch (Exception)
@@ -40,12 +41,12 @@ namespace Data_Layer__CRUD_
         {
             try
             {
-                Song songFromDB = await ReadAsync(key, false, false);
-                if (songFromDB == null)
+                User userFromDB = await ReadAsync(key,false,false);
+                if (userFromDB==null)
                 {
-                    throw new ArgumentException("This song does not exist");
+                    throw new ArgumentException("This User does not exist");
                 }
-                dBContext.Songs.Remove(songFromDB);
+                dBContext.Users.Remove(userFromDB);
                 await dBContext.SaveChangesAsync();
             }
             catch (Exception)
@@ -55,9 +56,9 @@ namespace Data_Layer__CRUD_
             }
         }
 
-        public async Task<ICollection<Song>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<ICollection<User>> ReadAllAsync(bool useNavigationalProperties = false, bool isReadOnly = true)
         {
-            IQueryable<Song> query = dBContext.Songs;
+            IQueryable<User> query = dBContext.Users;
             if (useNavigationalProperties)
             {
                 query = query.Include(p => p.PartySessions);
@@ -69,17 +70,17 @@ namespace Data_Layer__CRUD_
             return await query.ToListAsync();
         }
 
-        public async Task<Song> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
+        public async Task<User> ReadAsync(int key, bool useNavigationalProperties = false, bool isReadOnly = true)
         {
             try
             {
-                IQueryable<Song> query = dBContext.Songs;
+                IQueryable<User> query = dBContext.Users;
                 if (useNavigationalProperties)
                 {
                     query = query.Include(p => p.PartySessions);
                 }
-                if (isReadOnly)
-                {
+                if (isReadOnly) 
+                { 
                     query = query.AsNoTrackingWithIdentityResolution();
                 }
                 return await query.FirstOrDefaultAsync();
@@ -91,46 +92,46 @@ namespace Data_Layer__CRUD_
             }
         }
 
-        public async Task UpdateAsync(Song item, bool useNavigationalProperties = false)
+        public async Task UpdateAsync(User item, bool useNavigationalProperties = false)
         {
             try
             {
-                Song songFromDb = await ReadAsync(item.Id, useNavigationalProperties, false);
-                if (songFromDb==null)
+                User userFromDb = await ReadAsync(item.Id, useNavigationalProperties,false);
+
+                if (userFromDb==null)
                 {
                     await CreateAsync(item);
                     return;
                 }
-                
-                songFromDb.Name = item.Name;
-                songFromDb.Singer=item.Singer;
-                songFromDb.Description = item.Description;
-                songFromDb.LikesCount = item.LikesCount;
-
+                userFromDb.Nickname = item.Nickname;
+                userFromDb.Password = item.Password;
+                userFromDb.Email = item.Email;
+                userFromDb.Phone = item.Phone;
+                //userFromDb.CreditCard = item.CreditCard
                 if (useNavigationalProperties)
                 {
-                    List<SongPartySession> songPartySessions = new List<SongPartySession>();
-                    foreach (SongPartySession sps in item.SongPartySessions)
+                    List<UserPartySession> userPartySessions = new List<UserPartySession>();
+                    foreach(UserPartySession ups in item.UserPartySessions)
                     {
-                        SongPartySession spsFromDb = dBContext.SongPartySessions.Find(sps.PartySessionId, sps.SongId);
-                        if (spsFromDb!=null)
+                        UserPartySession upsFromDb = dBContext.UserPartySessions.Find(ups.PartySessionId, ups.UserId);
+                        if (upsFromDb != null)
                         {
-                            songPartySessions.Add(spsFromDb);
+                            userPartySessions.Add(upsFromDb);
                         }
                         else
                         {
-                            songPartySessions.Add(sps);
+                            userPartySessions.Add(ups);
                         }
                     }
                     //mai nqma nujda ot tova. tva e za 1:mnogo
-                    //PartySession partySessionFromDb = await dBContext.PartySessions.FindAsync(item.PartySession.Id);
+                    //PartySession partySessionFromDb = await dBContext.PartySessions.FindAsync(item.PartySessions.Id);
                     //if (partySessionFromDb != null)
                     //{
-                    //    songFromDb.PartySession = partySessionFromDb;
+                    //    userFromDb.PartySessions = partySessionFromDb;
                     //}
                     //else
                     //{
-                    //    songFromDb.PartySession = item.PartySession;
+                    //    userFromDb.PartySessions = item.PartySessions;
                     //}
                 }
                 await dBContext.SaveChangesAsync();
