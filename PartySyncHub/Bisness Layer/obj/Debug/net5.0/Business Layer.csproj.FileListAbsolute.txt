@@ -1,0 +1,4 @@
+C:\Users\hrist\Documents\programirane\PartySyncHub\Bisness Layer\obj\Debug\net5.0\Business Layer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hrist\Documents\programirane\PartySyncHub\Bisness Layer\obj\Debug\net5.0\Business Layer.AssemblyInfoInputs.cache
+C:\Users\hrist\Documents\programirane\PartySyncHub\Bisness Layer\obj\Debug\net5.0\Business Layer.AssemblyInfo.cs
+C:\Users\hrist\Documents\programirane\PartySyncHub\Bisness Layer\obj\Debug\net5.0\Business Layer.csproj.CoreCompileInputs.cache
